@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bona+Nova:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alegreya&family=Playfair+Display:wght@500&display=swap');
+html, body{
+    width: 100%;
+	height: 100%;
+	font-family: 'Dosis', sans-serif;
+	font-size: 20px;
+	color: #222;
+}
+.navbar{
+    background-color: rgba(216, 216, 216, 0.9) !important;
+    font-family: 'Dosis', sans-serif;
+    font-size: 25px;
+}
+.navbar li a{
+    color: #000 !important;
+}
+.navbar li a:hover{
+    color: rgb(16, 29, 218) !important;
+}
+.header{
+    height: 30px;
+    text-align: left;
+    background-color: #F3F3F3;
+    
+}
+.content{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.content-left{
+}
+.content-left img{
+    width: 100%;
+}
+.content-left-cat ul li{
+}
+.content-left-cat ul li .media-body p{
+    font-size: 14px !important;
+}
+.content-left-cat ul li .img{
+}
+.content-left-cat ul li .img a img{
+    width: 100%;
+}
+h5{
+    font-size: 19px !important;
+    
+}
+h5 a{
+    font-family: tahoma;
+    color: rgb(65, 63, 63) !important;
+}
+h5 a:hover{
+    font-family: tahoma;
+    color: rgb(31, 7, 250) !important;
+}
+.content-left-top{
+    position: absolute;
+    top: 25%;
+}
+.content-left-top h3{
+    text-align: center;
+    font-size: 50px;
+    font-family: 'Bona Nova', serif;
+}
+.content-left-top .description{
+    margin: 0 30px;
+    font-family: 'Bona Nova', serif;
+}
+.page{
+    text-align: center;
+}
+.content-right{
+}
+.content-right .content-right-top{
+    text-align:center;
+}
+.content-right .content-right-bootom{
+    margin-top: 10px;
+}
+.menu{
+    background-color:rgb(176, 215, 216);
+    color:azure;
+}
+footer{
+    background-color:#DCDCDC;
+    color: black;
+}
+footer .copyright{
+    margin: 20px;
+    text-align: center;
+
+}
+h4{
+    background-color:#afd4bb;
+    font-family: tahoma !important;
+    font-size: 20px !important;
+    text-align:center;
+    padding: 10px 0px;
+    border: 1px solid white !important;
+    border-radius: 5px !important;
+}
+/*detail*/
+.content-left-detail h1{
+    font-size:35px !important;
+    font-family: 'Alegreya', serif !important;
+}
+.content-left-detail .information{
+    font-size: 14px;
+    font-family: tahoma;
+}
+.content-left-detail p{
+    font-size: 17px;
+    font-family: tahoma;
+}
+h2{
+    font-size: 28px !important;
+    font-family: tahoma !important;
+}
+/*bài viết liên quan*/
+.Related-posts .container .row .col-md-4 a img{
+    width: 100%;
+}
+.Related-posts .container .row .col-md-4 .title{
+    margin-top: 10px;
+}
+.Related-posts .container .row .col-md-4 .title h5{
+    font-size: 15px !important;
+    font-family: tahoma !important;
+}
+.Related-posts .container .row .col-md-4 .title h5 a{
+    text-decoration: none !important;
+}
+a{
+    text-decoration:none;
+}
+/*đôi dòng lưu bút*/
+@media (max-width: 992px){
+    .content-left-top{
+        position: absolute;
+        top: 5%;
+    }
+    .content-left-top h3{
+        text-align: center;
+        font-size: 50px;
+        font-family: 'Bona Nova', serif;
+    }
+    .content-left-top .description{
+        margin: 0 30px;
+        font-family: 'Bona Nova', serif;
+    }
+    /*content details*/
+    .content-left-cat ul li{
+    }
+    .content-left-cat ul li .media-body p{
+        font-size: 14px !important;
+    }
+    .content-left-cat ul li .img{
+    }
+    .content-left-cat ul li .img a img{
+        width: 100%;
+    }
+    h5{
+        font-size: 19px !important;  
+    }
+    h5 a{
+        font-family: tahoma;
+        color: rgb(65, 63, 63) !important;
+    }
+    h5 a:hover{
+        font-family: tahoma;
+        color: rgb(31, 7, 250) !important;
+    }
+}
+
+/*giao diện di động*/
+@media (max-width: 768px){
+    .content-left-top{
+        position: absolute;
+        top: 20%;
+    }
+    .content-left-top h3{
+        text-align: center;
+        font-size: 30px;
+        font-family: 'Bona Nova', serif;
+    }
+    .content-left-top .description{
+        margin: 0 30px;
+        font-family: 'Bona Nova', serif;
+        font-size: 18px;
+    }
+    /*content details*/
+    .content-left-cat ul li{
+    }
+    .content-left-cat ul li .media-body p{
+        font-size: 14px !important;
+    }
+    .content-left-cat ul li .img{
+    }
+    .content-left-cat ul li .img a img{
+        width: 100%;
+        height: auto;
+    }
+    h5{
+        font-size: 19px !important;
+        
+    }
+    h5 a{
+        font-family: tahoma;
+        color: rgb(65, 63, 63) !important;
+    }
+    h5 a:hover{
+        font-family: tahoma;
+        color: rgb(31, 7, 250) !important;
+    }
+    /* detail chính*/
+    .content-left-detail p img{
+        width: 100% !important;
+    }
+    /*bài viết liên quan*/
+    .Related-posts .container .row .col-md-4 a img{
+        width: 100%;
+        height: 260px;
+    }
+    .Related-posts .container .row .col-md-4 .title{
+        margin-top: 10px;
+    }
+}
+@media (max-width: 576px){
+    .content-left-top{
+        position: absolute;
+        top: 15%;
+    }
+    .content-left-top h3{
+        text-align: center;
+        font-size: 30px;
+        font-family: 'Bona Nova', serif;
+    }
+    .content-left-top .description{
+        margin: 0 30px;
+        font-family: 'Bona Nova', serif;
+        font-size: 12px;
+    }
+    /*bài viết liên quan*/
+    .Related-posts .container .row .col-md-4 a img{
+        width: 100%;
+        height: 260px;
+    }
+    .Related-posts .container .row .col-md-4 .title{
+        margin-top: 10px;
+    }
+}

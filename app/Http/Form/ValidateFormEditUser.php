@@ -21,7 +21,8 @@ class ValidateFormEditUser
             'name.required' => 'Vui lòng nhập name',
             'name.min' => 'Vui lòng nhập password ít nhất 6 ký tự',
             'name.max' => 'Vui lòng nhập password nhiều nhất 32 ký tự'
-        ]);
+        ]); 
+        // cho edit eamil
         return $validator->validate();
     }
 }

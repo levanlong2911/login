@@ -28,13 +28,6 @@ class UserController extends Controller
             $this->form->validate($request,'ValidateFormLogin');// validate
             // $request->only nhận một phần nhỏ giữ liệu trong form 
             $creds = $request->only('email', 'password');
-            // if($request->remember === null){
-            //     setcookie('login_email', $request->email, 100);
-            //     setcookie('login_pass', $request->password, 100);
-            // }else{
-            //     setcookie('login_email', $request->email, time()+(86400*100));
-            //     setcookie('login_pass', $request->password, time()+(86400*100));
-            // }
             if(Auth::guard('web')->attempt($creds, $request->remember)){
                 return redirect()->route('user.index');
             }else{
@@ -57,29 +50,26 @@ class UserController extends Controller
                 $save = $user->save();
                 $user_id = $user->id;
                 $token = $user_id.hash('sha256', Str::random(120));
-                $verifyURL = route('user.verify', ['token'=>$token]);
+                $verifyURL = route('user.verify', ['token'=>$token, 'email'=>$user->email]);
                 VerifyUser::create([
                     'user_id'=>$user_id,
                     'token'=>$token,
                 ]);
                 $message = 'Thân gửi <b>'.$request->name.'</b>';
                 $message .= 'Cảm ơn bạn đã đăng ký, vui lòng click đường link phía dưới để hoàn tất công việc đăng ký và đăng nhập vào tài khoản';
-
+                // masseage bỏ vào teaplate
                 $mail_data = [
-                    'recipient' => $request->email,
-                    'fromEmail' => $request->email,
-                    'fromName' => $request->name,
+                    'email' => $request->email,
+                    'recipient' => $request->name,
                     'subject' => 'Xác thực email',
                     'content' => $message,
                     'actionLink' => $verifyURL,
                 ];
                 Mail::send('email-template', $mail_data, function($message) use ($mail_data){
-                        $message->to($mail_data['recipient'])
-                                ->from($mail_data['fromEmail'], $mail_data['fromName'])
+                        $message->to($mail_data['email'])
+                                ->from($mail_data['email'], $mail_data['recipient'])
                                 ->subject($mail_data['subject']);
                 });
-                // if($save)
-                // {
                 return redirect()->back()->with('success', 'Đăng ký thành công, bạn cần xác minh tài khoản trước khi đăng nhập, chúng tôi đã gửi link xác thực qua email đăng ký của bạn.');
             } catch(Exception $e) 
             {
@@ -93,29 +83,50 @@ class UserController extends Controller
     public function verify(Request $request)
     {
         $token = $request->token;
-        // phương thức first lấy ra một dòng dữ liệu, không có trả về Null 
+        $start_day = Carbon::now();
+        $created_at = $request->created_at;
+        $expiration_date = $start_day->diffInDays($created_at);
         $verifyUser = VerifyUser::where('token', $token)->first();
-        if(!is_null($verifyUser)){
-            $user = $verifyUser->user;
-            if(!$user->email_verified) 
-            {
-                // email_verified_at
-                $verifyUser->user->email_verified = 1;
-                DB::table('verify_users')->where([
-                    'token'=> $token
-                ])->delete();
-                $verifyUser->user->save();
-                return redirect()->route('user.login')->with('info', 'Email của bạn đã được xác minh thành công. Bây giờ bạn có thể đăng nhập.')->with('verifiedEmail', $user->email);
-            }else{
-                return redirect()->route('user.login')->with('info', 'Email của bạn đã được xác minh thành công. Bây giờ bạn có thể đăng nhập.')->with('verifiedEmail', $user->email);
+        if($expiration_date <= 1){
+            // phương thức first lấy ra một dòng dữ liệu, không có trả về Null 
+            
+            if(!is_null($verifyUser)){
+                $user = $verifyUser->user;
+                if(!$user->email_verified) 
+                {
+                    $verifyUser->user->email_verified_at = Carbon::now();
+                    DB::table('verify_users')->where([
+                        'token'=> $token
+                    ])->delete();
+                    $verifyUser->user->save();
+                    return redirect()->route('user.login')->with('info', 'Email của bạn đã được xác minh thành công. Bây giờ bạn có thể đăng nhập.')->with('verifiedEmail', $user->email);
+                } else
+                {
+                    return redirect()->route('user.login')->with('info', 'Email của bạn đã được xác minh thành công. Bây giờ bạn có thể đăng nhập.')->with('verifiedEmail', $user->email);
+                }
             }
+        } else {
+            // nếu quá thời gian xác nhận thì sẻ xóa tài khoản đã lưu
+            DB::table('users')->where('email', $request->email)->delete();
+            return redirect()->route('user.login')->with('fail', 'Thời gian xác nhận tài khoản đăng ký hết, vui lòng đăng ký lại.')->withInput();
         }
     }
     // Danh sách người dùng
-    public function list()
+    public function list(Request $request)
     {
         $users = User::orderby('id')->paginate(5);
         return view('dashboard.user.index', compact('users'));
+    }
+    public function search(Request $request)
+    {
+        if(isset($_POST['search']))
+        {
+            $search= $_POST['search'];
+            $users = User::where('name', 'LIKE', '%'.$search.'%')->orwhere('email', 'LIKE', '%'.$search.'%')->orderby('id')->paginate(5);
+            return view('dashboard.user.index', compact('users'));
+        }else{
+            return view('dashboard.user.index');
+        }
     }
     // guard('web') được dùng để xác thực người dùng
     function logout(Request $request)
@@ -162,13 +173,23 @@ class UserController extends Controller
         if(!$check_token){
             return back()->withInput()->with('fail', 'Token không hợp lệ');
         }else{
-            User::where('email', $request->email)->update([
-                'password' => Hash::make($request->password)
-            ]);
-            DB::table('password_resets')->where([
-                'email'=> $request->email
-            ])->delete();
-            return redirect()->route('user.login')->with('info', 'Mật khẩu bạn đã được thay đổi, bạn đăng nhập bằng mật khẩu mới.')->with('verifiedEmail', $request->email);
+            $start_day = Carbon::now();
+            $expiration_date = $start_day->diffInDays($request->created_at);
+            if($expiration_date <= 1)
+            {
+                User::where('email', $request->email)->update([
+                    'password' => Hash::make($request->password)
+                ]);
+                DB::table('password_resets')->where([
+                    'email'=> $request->email
+                ])->delete();
+                return redirect()->route('user.login')->with('info', 'Mật khẩu bạn đã được thay đổi, bạn đăng nhập bằng mật khẩu mới.')->with('verifiedEmail', $request->email);
+            } else {
+                DB::table('password_resets')->where([
+                    'email'=> $request->email
+                ])->delete();
+                return redirect()->route('user.forgot.password')->with('fail', 'Link thay đổi lại mật khẩu đã hết hạn, vui lòng đặt lại mật khẩu');
+            }
         }
     }
     // Xóa User

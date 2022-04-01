@@ -17,7 +17,7 @@ class IsUserVerifyEmail
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!Auth::guard('web')->user()->email_verified){
+        if(!Auth::guard('web')->user()->email_verified_at){
             Auth::guard('web')->logout();
             return redirect()->route('user.login')->with('fail', 'Bạn cần xác nhận tài khoản đã đăng ký, chúng tôi đã gửi cho bạn một liên kết qua email của bạn để hoàn tất đăng ký.')->withInput();
         }
