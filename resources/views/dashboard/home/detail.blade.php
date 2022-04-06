@@ -17,17 +17,18 @@
       <textarea name="comment" id="comment" cols="60" rows="5"></textarea>
     </div>
     <input type="hidden" name="post_id" value="{{ $posts->id }}">
-    {{-- <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"> --}}
+    {{-- <input type="hidden" name="user_id" value="{{ Auth::user()->id }}"> //so sánh với id bài --}}  
     <input type="submit" name="submit" class="btn btn-primary btn-block" value="Gửi bình luận">
   </form>
   <div>
     <h4>Hiển thị bình luận</h4>
     <div>
       
-      @foreach ($comments as $comment )
-        <h5>{{ $comment->name }}</h5>
-        <p>{{ $comment->comment }}</p>
+      @foreach ($posts->comments as $comment )
+        <h5>{{ $comment->user->name }}</h5>
+        <p>{{ $comment->comment }}</q>
       @endforeach
+      
     </div>
   </div>
 </body>

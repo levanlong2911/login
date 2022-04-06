@@ -10,22 +10,22 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-        $comments = Comment::all();
-        $posts = Post::all();
-        view()->share('posts', $posts);
-        view()->share('comment', $comments);
-    }
+    // public function __construct()
+    // {
+    //     $comments = Comment::all();
+    //     $posts = Post::all();
+    //     view()->share('posts', $posts);
+    //     view()->share('comment', $comments);
+    // }
     public function index()
     {
-        return view('dashboard.home.home');
+        $posts = Post::all();
+        return view('dashboard.home.home', compact('posts'));
     }
     public function detail($slug, $id, Request $request)
     {
         $posts = Post::find($id);
-        $comments = Comment::where('post_id', $id)->get();
-        return view('dashboard.home.detail', compact('posts', 'comments'));
+        return view('dashboard.home.detail', compact('posts'));
     }
     
 }

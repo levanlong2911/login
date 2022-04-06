@@ -23,10 +23,7 @@ Route::get('/', function () {
 });
 
 /**
- * PreventBackHistory: tạo middleware và chức năng ngăn người dùng back lại trang cũ khi đã đăng xuất
- * đặt nội dung gửi email ra ngoài
- * tìm kiếm trong user
- * valdate cho người dùng sửa email
+ * 
  * 
  */
 

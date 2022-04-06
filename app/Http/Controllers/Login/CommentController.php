@@ -18,7 +18,6 @@ class CommentController extends Controller
     {
         if($request->isMethod('post'))
         {
-            if(isset($_POST['submit'])){
                 $comment = new Comment();
                 $comment->fill($request->all());
                 $comment['user_id'] = Auth::user()->id;
@@ -27,7 +26,6 @@ class CommentController extends Controller
                 {
                     return redirect()->back();
                 }
-            }
         }
         return view('dashboard.home.detail');
     }
@@ -38,6 +36,7 @@ class CommentController extends Controller
             return redirect()->route('user.comment.index')->with('msg', 'Xóa thàng công');
         }
     }
+    
     public function searchComment(Request $request)
     {
         if(isset($_POST['search']))

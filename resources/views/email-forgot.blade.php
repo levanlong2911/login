@@ -1,5 +1,4 @@
 <h3>Đổi mật khẩu</h3>
 
-<p>{!! $content !!}</p>
-<br/>
-<a href="{{ $action_link }}">{{ $action_link }}</a>
+<p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu từ tài khoản email là {{ $detail_mail['email'] }}. Bạn có thể đặt lại mật khẩu của mình bằng cách click vào liên kết phía dưới.</p>
+<a href="{{ $detail_mail['action_link'] }}">{{ $detail_mail['action_link'] }}</a>

@@ -17,16 +17,13 @@ class PostController extends Controller
     {
         if($request->isMethod('POST'))
         {
-            if(isset($_POST['submit']))
+            $post = new Post();
+            $post->fill($request->all());
+            if($post->save())
             {
-                $post = new Post();
-                $post->fill($request->all());
-                if($post->save())
-                {
-                    return redirect()->route('user.post.index')->with('msg', 'Thêm thành công');
-                } else {
-                    return redirect()->route('user.post.index')->with('msg', 'Đã có lổi khi thêm');
-                }
+                return redirect()->route('user.post.index')->with('msg', 'Thêm thành công');
+            } else {
+                return redirect()->route('user.post.index')->with('msg', 'Đã có lổi khi thêm');
             }
         }
         return view('dashboard.post.add');
@@ -36,15 +33,11 @@ class PostController extends Controller
         $posts = Post::find($id);
         if($request -> isMethod('POST')) 
         {
-            if(isset($_POST['submit'])){
-                Post::where('id', $posts->id)->update([
-                    'title' => $request->title,
-                    'content' => $request->content
-                ]);
-                return redirect()->route('user.post.index')->with('msg', 'Sửa thành công');
-            } else {
-                return redirect()->route('user.post.index')->with('msg', 'Đã có lổi khi sửa');
-            }
+            Post::where('id', $posts->id)->update([
+                'title' => $request->title,
+                'content' => $request->content
+            ]);
+            return redirect()->route('user.post.index')->with('msg', 'Sửa thành công');
         }
         return view('dashboard.post.edit', compact('posts'));
     }

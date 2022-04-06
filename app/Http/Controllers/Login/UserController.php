@@ -55,17 +55,14 @@ class UserController extends Controller
                     'user_id'=>$user_id,
                     'token'=>$token,
                 ]);
-                $message = 'Thân gửi <b>'.$request->name.'</b>';
-                $message .= 'Cảm ơn bạn đã đăng ký, vui lòng click đường link phía dưới để hoàn tất công việc đăng ký và đăng nhập vào tài khoản';
-                // masseage bỏ vào teaplate
                 $mail_data = [
                     'email' => $request->email,
                     'recipient' => $request->name,
                     'subject' => 'Xác thực email',
-                    'content' => $message,
+                    // 'content' => $message,
                     'actionLink' => $verifyURL,
                 ];
-                Mail::send('email-template', $mail_data, function($message) use ($mail_data){
+                Mail::send('email-template', ['mail_data' => $mail_data], function($message) use ($mail_data){
                         $message->to($mail_data['email'])
                                 ->from($mail_data['email'], $mail_data['recipient'])
                                 ->subject($mail_data['subject']);
@@ -106,7 +103,7 @@ class UserController extends Controller
                 }
             }
         } else {
-            // nếu quá thời gian xác nhận thì sẻ xóa tài khoản đã lưu
+            // nếu quá thời gian xác nhận thì sẻ xóa tài khoản đã lưu ở database
             DB::table('users')->where('email', $request->email)->delete();
             return redirect()->route('user.login')->with('fail', 'Thời gian xác nhận tài khoản đăng ký hết, vui lòng đăng ký lại.')->withInput();
         }
@@ -147,9 +144,13 @@ class UserController extends Controller
                 'created_at' => Carbon::now()
             ]);
             $action_link = route('user.reset.password.form', ['token'=>$token, 'email'=>$request->email]);
-            $content = 'Chúng tôi nhận được yêu cầu đặt lại mật khẩu từ tài khoản email là '.$request->email.'. Bạn có thể đặt lại mật khẩu của mình bằng cách click vào liên kết phía dưới.';
+            // $content = 'Chúng tôi nhận được yêu cầu đặt lại mật khẩu từ tài khoản email là '.$request->email.'. Bạn có thể đặt lại mật khẩu của mình bằng cách click vào liên kết phía dưới.';
+            $detail_mail = [
+                'action_link' => $action_link,
+                'email'=>$request->email
+            ];
 
-            Mail::send('email-forgot',['action_link'=>$action_link, 'content'=>$content], function($message) use($request){
+            Mail::send('email-forgot',['detail_mail'=>$detail_mail], function($message) use($request){
                 $message->from('noreply@example.com', 'admin');
                 $message->to($request->email)
                         ->subject('Reset password');
